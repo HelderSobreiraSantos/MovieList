@@ -3,26 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Lista de Filmes</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: inline-block;
+            width: 300px;
+            vertical-align: top;
+        }
+        .movie-image {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .card-title {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 8px 0;
+        }
+        .genres {
+            margin: 8px 0;
+        }
+        .genre {
+            display: inline-block;
+            padding: 4px 8px;
+            margin: 2px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
-
-    {% for a in filmes%}
-    <h1>{{a.titulo}}, {{a.data}}, {{a.duracao}} <a href="/deleteFilme/{{a.id}}/" ><button>Deletar</button></a> </h1>    
-    {% endfor %}
-
-    <form action="/addFilme/" method="POST">
-        {% csrf_token %}
-        <label for="filmTitulo">Titulo</label><br>
-        <input type="text" id="filmTitulo" name="filmTitulo"><br>
-
-        <label for="filmDuracao">Duracao</label><br>
-        <input type="text" id="filmDuracao" name="filmDuracao"><br>
-
-        <label for="filmData">Data</label><br>
-        <input type="text" id="filmData" name="filmData"><br><br>
-        
-        <input type="submit" value="ADD"></form>
-
+    <h1>Lista de Filmes</h1>
+    <div>
+        {% for filme in filmes %}
+        <div class="card">
+            {% if filme.imagem %}
+            <img src="{{ filme.imagem.url }}" alt="{{ filme.titulo }}" class="movie-image">
+            {% endif %}
+            <div class="card-title">{{ filme.titulo }}</div>
+            <p>Data: {{ filme.data }}</p>
+            <p>Duração: {{ filme.duracao }}</p>
+            <div class="genres">
+                {% for genero in filme.generos.all %}
+                <span class="genre">{{ genero.nome }}</span>
+                {% empty %}
+                <span>Sem gêneros</span>
+                {% endfor %}
+            </div>
+            <a href="{% url 'updateFilme' filme.id %}">Atualizar</a>
+            <a href="{% url 'deleteFilme' filme.id %}">Deletar</a>
+        </div>
+        {% endfor %}
+    </div>
 </body>
 </html>

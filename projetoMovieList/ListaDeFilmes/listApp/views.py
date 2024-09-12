@@ -1,31 +1,44 @@
-from django.shortcuts import redirect, render
-from listApp.models import Filme
-from django.http import HttpResponse
-
-#from django.http import HttpResponse
-
-def index(request):
-    #return HttpResponse("Hello, world.")
-    filmes = Filme.objects.all()
-    context={'filmes':filmes}
-    
-    return render(request, 'index.html', context)
-    #return render(request, 'index.html', context)
+from django.shortcuts import render, redirect
+from .forms import FilmeForm
+from .models import Filme, Genero
+from .forms import GeneroForm
 
 def addFilme(request):
-    titulo = request.POST['filmTitulo']
-    duracao = request.POST['filmDuracao']
-    data = request.POST['filmData']
-
-    filme = Filme(
-        titulo = titulo,
-        duracao = duracao,
-        data = data,
-    )
-    filme.save()
-    return redirect('http://127.0.0.1:8000/')
+    if request.method == 'POST':
+        form = FilmeForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = FilmeForm()
+    return render(request, 'addfilme.html', {'form': form})
 
 def deleteFilme(request, pk):
     filme = Filme.objects.get(id=pk)
     filme.delete()
-    return redirect('http://127.0.0.1:8000/')
+    return redirect('index')
+
+def updateFilme(request, id):
+    filme = Filme.objects.get(id=id)
+    if request.method == 'POST':
+        form = FilmeForm(request.POST, request.FILES, instance=filme)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = FilmeForm(instance=filme)
+    return render(request, 'updatefilme.html', {'form': form})
+
+def index(request):
+    filmes = Filme.objects.all()
+    return render(request, 'index.html', {'filmes': filmes})
+
+def addGenero(request):
+    if request.method == 'POST':
+        form = GeneroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = GeneroForm()
+    return render(request, 'addgenero.html', {'form': form})
