@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Usuario</title>
+</head>
+<body>
+    <h1>Add Usuario</h1>
+    <form method="post" action="{% url 'addUsuario' %}">
+        {% csrf_token %}
+        
+        <label for="id_nome">Nome</label><br>
+        <input type="text" id="id_nome" name="nome" value="{{ form.nome.value|default_if_none:'' }}"><br>
+
+        <label for="id_email">E-mail</label><br>
+        <input type="text" id="id_email" name="email" value="{{ form.email.value|default_if_none:'' }}"><br>
+
+        <label for="id_senha">Senha</label><br>
+        <input type="password" id="id_senha" name="senha"><br> <!-- Campo de senha adicionado -->
+
+        <input type="submit" value="Add">
+    </form>
+</body>
+</html>

@@ -15,3 +15,13 @@ class Filme(models.Model):
 
     def __str__(self):
         return self.titulo
+    
+class Usuario(models.Model):
+    id = models.AutoField(primary_key=True)
+    nome = models.CharField(max_length=100)
+    email = models.CharField(max_length=100, unique=True)
+    senha = models.CharField(max_length=100)
+    #adicionar campo senha aqui 
+
+    def __str__(self):
+        return str(self.id)
