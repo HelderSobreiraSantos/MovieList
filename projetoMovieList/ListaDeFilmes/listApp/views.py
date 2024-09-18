@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, render, get_object_or_404
-from django.contrib.auth import authenticate, login 
+from django.contrib.auth import authenticate, login, logout 
 from .forms import FilmeForm, UsuarioForm
 from django.contrib.auth.hashers import make_password, check_password
 from .models import Filme, Genero, Usuario
@@ -57,21 +57,32 @@ def addUsuario(request):
         form = UsuarioForm()
     return render(request, 'addUsuario.html', {'form': form})
 
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+
 def logar(request):
+    error_message = None  # Inicializa a mensagem de erro
     if request.method == 'POST':
         email = request.POST.get('email')
         senha = request.POST.get('senha')
-        try:
-            usuario = Usuario.objects.get(email=email)
-            if check_password(senha, usuario.senha):
-                # Aqui você deve adicionar a lógica de sessão, se necessário
-                return redirect('paginaDoUsuario', usuario_id=usuario.id)  # Redireciona para a página do usuário
-            else:
-                error_message = "Senha incorreta."
-        except Usuario.DoesNotExist:
-            error_message = "Usuário não encontrado."
+        
+        # Tente autenticar usando o email como username
+        usuario = authenticate(request, username=email, password=senha)
+        
+        if usuario is not None:
+            # Se a autenticação foi bem-sucedida, faça o login
+            login(request, usuario)
+            return redirect('paginaDoUsuario', usuario_id=usuario.id)  # Redireciona para a página do usuário
+        else:
+            error_message = "Usuário ou senha incorretos."
 
-    return render(request, 'logar.html', {'error_message': error_message if 'error_message' in locals() else ''})
+    return render(request, 'logar.html', {'error_message': error_message})
+
+
+    return render(request, 'logar.html', {'error_message': error_message})
+def sair(request):
+    logout(request)  # Faz o logout do usuário
+    return redirect('index')
 
 def paginaDoUsuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
