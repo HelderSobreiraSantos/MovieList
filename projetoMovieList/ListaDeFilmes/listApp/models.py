@@ -21,6 +21,7 @@ class Usuario(models.Model):
     nome = models.CharField(max_length=100)
     email = models.CharField(max_length=100, unique=True)
     senha = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
     #adicionar campo senha aqui 
 
     def __str__(self):

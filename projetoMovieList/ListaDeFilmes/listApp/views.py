@@ -4,6 +4,8 @@ from .forms import FilmeForm, UsuarioForm
 from django.contrib.auth.hashers import make_password, check_password
 from .models import Filme, Genero, Usuario
 from .forms import GeneroForm
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
 
 def addFilme(request):
     if request.method == 'POST':
@@ -57,29 +59,29 @@ def addUsuario(request):
         form = UsuarioForm()
     return render(request, 'addUsuario.html', {'form': form})
 
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
-
 def logar(request):
-    error_message = None  # Inicializa a mensagem de erro
+    error_message = None
     if request.method == 'POST':
         email = request.POST.get('email')
         senha = request.POST.get('senha')
         
-        # Tente autenticar usando o email como username
-        usuario = authenticate(request, username=email, password=senha)
+        print(f"Tentando autenticar: {email}")
+        user = Usuario.objects.get(email=email)
+        username = user.nome
+        usuario = authenticate(request, username=username, password=senha)
         
+
         if usuario is not None:
-            # Se a autenticação foi bem-sucedida, faça o login
             login(request, usuario)
-            return redirect('paginaDoUsuario', usuario_id=usuario.id)  # Redireciona para a página do usuário
+            context = {
+                'usuario': usuario,
+            }
+            return render(request, 'paginaDoUsuario.html', context) #,context  
         else:
-            error_message = "Usuário ou senha incorretos."
+            error_message = "Usuário Ou Senha Incorretos."
 
     return render(request, 'logar.html', {'error_message': error_message})
 
-
-    return render(request, 'logar.html', {'error_message': error_message})
 def sair(request):
     logout(request)  # Faz o logout do usuário
     return redirect('index')

@@ -7,9 +7,13 @@
 </head>
 <body>
     <h1>Informações do Usuário</h1>
-    <p><strong>Nome:</strong> {{ usuario.nome }}</p>
+     
+    {% if user.is_authenticated %}
+    <p><strong>tá logado</strong></p> 
+    <p><strong>Nome:</strong> {{ usuario.username }}</p> <!-- chamar username para o nome -->
     <p><strong>E-mail:</strong> {{ usuario.email }}</p>
-
+    {%endif%}
+    
     <br>
     <a href="{% url 'index' %}">Voltar</a>
 </body>
