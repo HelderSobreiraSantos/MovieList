@@ -69,21 +69,20 @@ def logar(request):
         user = Usuario.objects.get(email=email)
         username = user.nome
         usuario = authenticate(request, username=username, password=senha)
-        
 
         if usuario is not None:
             login(request, usuario)
             context = {
                 'usuario': usuario,
             }
-            return render(request, 'paginaDoUsuario.html', context) #,context  
+            return render(request, 'paginaDoUsuario.html', context) #lembrar de retirar o context e fazer tudo no html  
         else:
             error_message = "Usuário Ou Senha Incorretos."
 
     return render(request, 'logar.html', {'error_message': error_message})
 
 def sair(request):
-    logout(request)  # Faz o logout do usuário
+    logout(request)
     return redirect('index')
 
 def paginaDoUsuario(request, usuario_id):
