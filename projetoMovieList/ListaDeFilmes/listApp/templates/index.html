@@ -71,6 +71,9 @@
             border-radius: 4px;
             font-size: 0.8em;
         }
+        .card p.date {
+            color: black; /* Cor do texto da data */
+        }
     </style>
 </head>
 <body>
@@ -124,7 +127,7 @@
                             <div class="movie-image-container" style="background-image: url('{{ filme.imagem.url }}');"></div>
                             <div>
                                 <div class="card-title">{{ filme.titulo }}</div>
-                                <p>Data: {{ filme.data }}</p>
+                                <p class="date">Data: {{ filme.data }}</p> <!-- Alterado para texto preto -->
                                 <div class="genres">
                                     {% for genero in filme.generos.all %}
                                     <span class="genre">{{ genero.nome }}</span>
@@ -133,6 +136,8 @@
                                     {% endfor %}
                                 </div>
                             </div>
+                            <a href="{% url 'updateFilme' filme.id %}">Atualizar</a>
+                            <a href="{% url 'deleteFilme' filme.id %}">Deletar</a>
                         </div>
                         {% endfor %}
                     </div>
