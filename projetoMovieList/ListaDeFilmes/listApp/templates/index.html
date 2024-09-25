@@ -6,112 +6,146 @@
     <title>Lista de Filmes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     {% load static %}
+    <link rel="stylesheet" href="{% static 'estilos.css' %}">
+
     <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            margin-top: 60px;
+        }
+        h1, h2, h3, p {
+            font-family: Arial, sans-serif; /* Fonte padronizada */
+            color: #343a40; /* Cor padrão do texto */
+        }
+        h2 {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .container-sm {
+            width: 100%;
+            padding: 0 15px;
+        }
+        .lista {
+            margin-bottom: 40px;
+            color: white; /* Cor do texto da lista */
+            text-align: center; /* Centralizar o texto da lista */
+        }
+        .lista h3, .lista p {
+            color: white; /* Cor do texto do nome da lista, descrição e usuário */
+        }
         .card {
             border: 1px solid #ddd;
             border-radius: 8px;
-            padding: 16px;
-            margin: 16px;
+            padding: 10px;
+            margin: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 135px;
+            height: 260px;
             display: inline-block;
-            width: 300px;
             vertical-align: top;
+            font-size: 0.9em;
+            color: black; /* Cor do texto dos cards */
         }
-        .movie-image {
+        .movie-image-container {
             width: 100%;
-            height: auto;
-            max-height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
+            height: 120px; /* Altura da div da imagem */
+            background-size: cover; /* Cobrir toda a div */
+            background-position: center; /* Centralizar a imagem */
+            border-radius: 4px; /* Bordas arredondadas */
+            margin-bottom: 8px; /* Espaço abaixo da imagem */
         }
         .card-title {
             font-weight: bold;
-            font-size: 1.2em;
-            margin: 8px 0;
+            font-size: 1.1em;
+            margin: 6px 0;
         }
         .genres {
-            margin: 8px 0;
+            margin: 6px 0;
         }
         .genre {
             display: inline-block;
-            padding: 4px 8px;
+            padding: 4px 6px;
             margin: 2px;
             background-color: #f0f0f0;
             border-radius: 4px;
-            font-size: 0.9em;
+            font-size: 0.8em;
         }
     </style>
 </head>
 <body>
-
     <nav class="navbar navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{% url 'index' %}">Wick Movie List</a> 
-          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Dark offcanvas</h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="{% url 'logar' %}">Entrar</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Dropdown
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-dark">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                  </ul>
-                </li>
-              </ul>
-              <form class="d-flex mt-3" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-success" type="submit">Search</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-    <h1>Lista de Filmes</h1>
-    <div class="container">
-        <div class="col">
-            {% for filme in filmes %}
-            <div class="card">
-                {% if filme.imagem %}
-                <img src="{{ filme.imagem.url }}" alt="{{ filme.titulo }}" class="movie-image">
-                {% endif %}
-                <div class="card-title">{{ filme.titulo }}</div>
-                <p>Data: {{ filme.data }}</p>
-                <p>Duração: {{ filme.duracao }}</p>
-                <div class="genres">
-                    {% for genero in filme.generos.all %}
-                    <span class="genre">{{ genero.nome }}</span>
-                    {% empty %}
-                    <span>Sem gêneros</span>
-                    {% endfor %}
+            <a class="navbar-brand" href="{% url 'index' %}">Wick Movie List</a> 
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
-                <a href="{% url 'updateFilme' filme.id %}">Atualizar</a>
-                <a href="{% url 'deleteFilme' filme.id %}">Deletar</a>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'logar' %}">Entrar</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3"></ul>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'paginaDoUsuario' %}">Página do Usuário</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex mt-3" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-success" type="submit">Search</button>
+                    </form>
+                </div>
             </div>
+        </div>
+    </nav>
+    <br>
+    <h1 class="text-center">Listas de Filmes</h1>
+    <br>
+    <div class="container-sm">
+        <div class="d-flex flex-column">
+            {% for lista in listas_de_filmes %}
+            <div class="container lista bg-dark">
+                <div class="row align-items-center justify-content-center"> <!-- Centraliza as colunas -->
+                    <div class="col-auto text-center"><h3>{{ lista.nome }}</h3></div>
+                    <div class="col-auto text-center"><p>Descrição: {{ lista.descricao }}</p></div>
+                    <div class="col-auto text-center"><p>Criada por: {{ lista.usuario.nome }}</p></div>
+                </div>
+                
+                <div class="row justify-content-center"> <!-- Adicionei esta linha para centralizar -->
+                    <div class="col-auto d-flex flex-wrap justify-content-center"> <!-- Centraliza os cards -->
+                        {% for filme in lista.filmes.all %}
+                        <div class="card container">
+                            <div class="movie-image-container" style="background-image: url('{{ filme.imagem.url }}');"></div>
+                            <div>
+                                <div class="card-title">{{ filme.titulo }}</div>
+                                <p>Data: {{ filme.data }}</p>
+                                <div class="genres">
+                                    {% for genero in filme.generos.all %}
+                                    <span class="genre">{{ genero.nome }}</span>
+                                    {% empty %}
+                                    <span>Sem gêneros</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <br>
+            </div>
+            <br>
+            {% empty %}
+            <p>Nenhuma lista de filmes encontrada.</p>
             {% endfor %}
         </div>
     </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 </body>
 </html>

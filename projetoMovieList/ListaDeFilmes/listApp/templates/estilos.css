@@ -1,0 +1,81 @@
+/* Estilo geral do corpo */
+body {
+    background-color: #f8f9fa; /* Cor de fundo suave */
+    font-family: Arial, sans-serif; /* Fonte padrão */
+    margin-top: 60px; /* Espaço para a navbar fixa */
+}
+
+/* Título principal */
+h2 {
+    text-align: center;
+    margin: 20px 0;
+    color: #343a40; /* Cor do título */
+}
+
+/* Container principal */
+.container-sm {
+    width: 100%; /* Ocupar toda a largura da tela */
+    padding: 0 15px; /* Adiciona algum espaço nas laterais */
+}
+
+/* Estilo dos cards de listas de filmes */
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 16px;
+    margin: 16px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff; /* Fundo dos cards */
+}
+
+/* Estilo da imagem do filme */
+.movie-image {
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+/* Estilo do título do filme */
+.card-title {
+    font-weight: bold;
+    font-size: 1.3em;
+    color: #007bff; /* Cor dos títulos dos filmes */
+}
+
+/* Estilo para as descrições */
+p {
+    color: #495057; /* Cor do texto */
+}
+
+/* Estilo para os gêneros */
+.genres {
+    margin: 8px 0;
+}
+
+.genre {
+    display: inline-block;
+    padding: 4px 10px;
+    margin: 2px;
+    background-color: #e9ecef; /* Fundo dos gêneros */
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+/* Estilo dos links de ação */
+a {
+    text-decoration: none;
+    color: #007bff; /* Cor dos links */
+}
+
+a:hover {
+    text-decoration: underline; /* Sublinhado ao passar o mouse */
+}
+
+/* Estilo do botão de busca */
+.btn-success {
+    background-color: #28a745; /* Cor do botão de busca */
+    border: none; /* Remove borda */
+}
+
+.btn-success:hover {
+    background-color: #218838; /* Cor do botão ao passar o mouse */
+}

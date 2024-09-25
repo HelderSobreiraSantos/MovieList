@@ -2,10 +2,13 @@ from django.shortcuts import render, redirect, render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout 
 from .forms import FilmeForm, UsuarioForm
 from django.contrib.auth.hashers import make_password, check_password
-from .models import Filme, Genero, Usuario
+from .models import Filme, Genero, Usuario, ListaDeFilmes
 from .forms import GeneroForm
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
+
+from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.contrib.auth.decorators import login_required
+
 
 def addFilme(request):
     if request.method == 'POST':
@@ -35,7 +38,8 @@ def updateFilme(request, id):
 
 def index(request):
     filmes = Filme.objects.all()
-    return render(request, 'index.html', {'filmes': filmes})
+    listas_de_filmes = ListaDeFilmes.objects.all()  # Obter todas as listas de filmes
+    return render(request, 'index.html', {'filmes': filmes, 'listas_de_filmes': listas_de_filmes})
 
 def addGenero(request):
     if request.method == 'POST':
@@ -75,7 +79,8 @@ def logar(request):
             context = {
                 'usuario': usuario,
             }
-            return render(request, 'paginaDoUsuario.html', context) #lembrar de retirar o context e fazer tudo no html  
+            return redirect('http://127.0.0.1:8000/')
+            #return redirect(request, 'index.html') #lembrar de retirar o context e fazer tudo no html  
         else:
             error_message = "Usuário Ou Senha Incorretos."
 
@@ -85,9 +90,71 @@ def sair(request):
     logout(request)
     return redirect('index')
 
-def paginaDoUsuario(request, usuario_id):
-    usuario = get_object_or_404(Usuario, id=usuario_id)
-    return render(request, 'paginaDoUsuario.html', {'usuario': usuario})
+@login_required(login_url="logar")
+def paginaDoUsuario(request):
+    usuario_atual = Usuario.objects.get(nome=request.user.username)
+    filmes = Filme.objects.all()
+    context = {
+        'filmes':filmes,
+    }
+    return render(request, 'paginaDoUsuario.html', context)
 
+@login_required(login_url="logar")
+def addListaDeFilmes(request):
+    usuario_atual = Usuario.objects.get(nome=request.user.username)
 
+    if request.method == "POST":
+        nome = request.POST.get('nome')
+        descricao = request.POST.get('descricao')
+        filme_ids = request.POST.get('filmes').split(' ')
+        genero=Genero.objects.get(id=1)
+        filme1 = Filme.objects.get(id = filme_ids[0])
+        #print("filmes entrando: ", filme_ids)
+        lista_de_filmes = ListaDeFilmes(nome=nome, descricao=descricao, genero=genero, usuario=usuario_atual) #filmes=filme1
+        lista_de_filmes.save()
+        #print(f"Dados recebidos - Nome: {nome}, Descrição: {descricao}, IDs dos filmes: {filme_ids}")
 
+        lista = ListaDeFilmes.objects.get(nome=nome)
+        #for cont in range(len(filme_ids)):
+        #    if filme_ids[cont] != " ":  
+        #        lista.filmes.add(filme_ids[cont])
+        #        print("numero de vezes:", cont)
+
+        #print("numero de vezes:", filme_ids[0])
+        lista.filmes.add(int(filme_ids[0]))
+        #print("numero de vezes:", filme_ids[1])
+        lista.filmes.add(int(filme_ids[1]))
+        #print("numero de vezes:", filme_ids[2])
+        lista.filmes.add(int(filme_ids[2]))
+        #print("numero de vezes:", filme_ids[3])
+        lista.filmes.add(int(filme_ids[3]))
+        #print("numero de vezes:", filme_ids[4])
+        lista.filmes.add(int(filme_ids[4]))
+        #print("numero de vezes:", filme_ids[5])
+        lista.filmes.add(int(filme_ids[5]))
+        #print("numero de vezes:", filme_ids[6])
+        lista.filmes.add(int(filme_ids[6]))
+
+        return render(request, 'paginaDoUsuario.html')
+
+#TypeError at /addListaDeFilmes/
+#'ListaDeFilmes' object is not iterable
+#Request Method:	POST
+#Request URL:	http://127.0.0.1:8000/addListaDeFilmes/
+#Django Version:	5.0.2
+#Exception Type:	TypeError
+#Exception Value:	
+#'ListaDeFilmes' object is not iterable
+#Exception Location:	C:\Users\filho\OneDrive\Documentos\GitHub\MovieList\projetoMovieList\envConfig\Lib\site-packages\django\template\defaulttags.py, line 197, in render
+#Raised during:	listApp.views.addListaDeFilmes
+#Python Executable:	C:\Users\filho\OneDrive\Documentos\GitHub\MovieList\projetoMovieList\envConfig\Scripts\python.exe
+#Python Version:	3.12.2
+#Python Path:	
+#['C:\\Users\\filho\\OneDrive\\Documentos\\GitHub\\MovieList\\projetoMovieList\\ListaDeFilmes',
+# 'C:\\Users\\filho\\AppData\\Local\\Programs\\Python\\Python312\\python312.zip',
+# 'C:\\Users\\filho\\AppData\\Local\\Programs\\Python\\Python312\\DLLs',
+# 'C:\\Users\\filho\\AppData\\Local\\Programs\\Python\\Python312\\Lib',
+# 'C:\\Users\\filho\\AppData\\Local\\Programs\\Python\\Python312',
+# 'C:\\Users\\filho\\OneDrive\\Documentos\\GitHub\\MovieList\\projetoMovieList\\envConfig',
+# 'C:\\Users\\filho\\OneDrive\\Documentos\\GitHub\\MovieList\\projetoMovieList\\envConfig\\Lib\\site-packages']
+#Server time:	Tue, 24 Sep 2024 22:34:06 +0000

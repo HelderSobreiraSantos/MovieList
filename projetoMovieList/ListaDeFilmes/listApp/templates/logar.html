@@ -4,29 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            margin-top: 60px;
+            text-align: center;
+        }
+        h1 {
+            color: #343a40; /* Cor do título */
+            margin-bottom: 30px;
+        }
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            margin: auto;
+        }
+        label {
+            font-weight: bold;
+            color: #343a40; /* Cor das labels */
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        input[type="submit"] {
+            background-color: #28a745; /* Cor do botão */
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        input[type="submit"]:hover {
+            background-color: #218838; /* Cor do botão ao passar o mouse */
+        }
+        .link {
+            color: #007bff; /* Cor dos links */
+            text-decoration: none;
+        }
+        .link:hover {
+            text-decoration: underline; /* Efeito ao passar o mouse nos links */
+        }
+    </style>
 </head>
 <body>
-    <h1>Login</h1>
-    
-    {% if error_message %}
-        <p style="color: red;">{{ error_message }}</p>
-    {% endif %}
+    <div class="form-container">
+        <h1>Login</h1>
+        
+        {% if error_message %}
+            <p style="color: red;">{{ error_message }}</p>
+        {% endif %}
 
-    <form method="post" action="{% url 'logar' %}">
-        {% csrf_token %}
-        <label for="id_email">E-mail</label><br>
-        <input type="text" id="id_email" name="email"><br>
-    
-        <label for="id_senha">Senha</label><br>
-        <input type="password" id="id_senha" name="senha"><br>
-    
-        <input type="submit" value="Login">
-    </form>
+        <form method="post" action="{% url 'logar' %}">
+            {% csrf_token %}
+            <label for="id_email">E-mail</label>
+            <input type="text" id="id_email" name="email">
 
-    <br>
-    <a href="{% url 'addUsuario' %}">Não está inscrito? Cadastre-se</a>
-    <br>
-    <br>
-    <a href="{% url 'index' %}">Voltar</a>
+            <label for="id_senha">Senha</label>
+            <input type="password" id="id_senha" name="senha">
+
+            <input type="submit" value="Login">
+        </form>
+
+        <br>
+        <a class="link" href="{% url 'addUsuario' %}">Não está inscrito? Cadastre-se</a>
+        <br>
+        <br>
+        <a class="link" href="{% url 'index' %}">Voltar</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
 </html>

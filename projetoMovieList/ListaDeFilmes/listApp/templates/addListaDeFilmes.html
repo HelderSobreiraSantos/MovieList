@@ -1,71 +1,70 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página do Usuário</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Adicionar Lista de Filmes</title>
+    <style>
+        /* ... seu CSS permanece o mesmo ... */
+    </style>
 </head>
 <body>
-    <h1>Página do Usuário</h1>
-     
-    {% if user.is_authenticated %}
-    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">Informações do usuário</button>
-
-    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasBottomLabel">Informações do Usuário</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <h1>Adicionar Lista de Filmes</h1>
+    
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
         </div>
-        <div class="offcanvas-body small">
-            <p><strong>Nome:</strong> {{ usuario.username}}</p>
-            <p><strong>E-mail:</strong> {{ usuario.email }}</p>
-        </div>
-    </div>
+    {% endif %}
 
-    <h2>Adicionar Lista de Filmes</h2>
-    <form method="POST" action="/addListaDeFilmes/">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="mb-3">
-            <label for="nome" class="form-label">Nome da Lista:</label>
-            <input type="text" class="form-control" id="nome" name="nome" required>
+        
+        <div>
+            <label for="nome">Nome da Lista:</label>
+            <input type="text" id="nome" name="nome" required>
         </div>
-        <div class="mb-3">
-            <label for="descricao" class="form-label">Descrição:</label>
-            <textarea class="form-control" id="descricao" name="descricao" required></textarea>
+        
+        <div>
+            <label for="descricao">Descrição:</label>
+            <textarea id="descricao" name="descricao" required></textarea>
         </div>
-        <div class="mb-3">
-            <label for="filmeSelect" class="form-label">Selecionar Filmes:</label>
-            <select id="filmeSelect" class="form-select">
+        
+        <div>
+            <label>Adicionar Filme:</label>
+            <select id="filmeSelect">
                 <option value="">Selecione um filme</option>
                 {% for filme in filmes %}
                     <option value="{{ filme.id }}">{{ filme.titulo }}</option>
                 {% endfor %}
             </select>
-            <button type="button" class="btn btn-secondary mt-2" onclick="adicionarFilme()">Adicionar Filme</button>
+            <button type="button" onclick="adicionarFilme()">Adicionar Filme</button>
         </div>
         
         <div class="filmes-adicionados" id="filmesAdicionados">
             <!-- Filmes adicionados serão mostrados aqui -->
         </div>
 
+        <!-- Campo oculto para armazenar IDs dos filmes -->
         <input type="hidden" id="filmesInput" name="filmes" value="">
-        <button type="submit" class="btn btn-success mt-3">Adicionar Lista</button>
+        
+        <button type="submit">Adicionar Lista</button>
     </form>
+    
+    <a href="{% url 'index' %}">Voltar para a lista de filmes</a>
+    <a href="{% url 'paginaDoUsuario' request.user.id %}">Voltar para a sua página</a>
 
-    {% endif %}
-    
-    <br>
-    <a href="{% url 'index' %}">Voltar</a>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function adicionarFilme() {
             const select = document.getElementById('filmeSelect');
             const filmeId = select.value;
             const filmeTitulo = select.options[select.selectedIndex].text;
             const filmesAdicionadosDiv = document.getElementById('filmesAdicionados');
-
+            const filmesInput = document.getElementById('filmesInput');
+            
             if (filmeId) {
                 // Verifica se o filme já foi adicionado
                 if ([...filmesAdicionadosDiv.children].some(item => item.dataset.id === filmeId)) {
@@ -73,20 +72,19 @@
                     return;
                 }
 
-                const filmeItem = document.createElement('div'); 
+                const filmeItem = document.createElement('div');
                 filmeItem.className = 'filme-item';
                 filmeItem.textContent = filmeTitulo;
                 filmeItem.dataset.id = filmeId; // Armazena o ID do filme
 
                 const removeButton = document.createElement('span');
-                removeButton.textContent = ' x';
+                removeButton.textContent = 'x';
                 removeButton.className = 'remove-filme';
-                removeButton.style.cursor = 'pointer';
                 removeButton.onclick = function() {
                     filmesAdicionadosDiv.removeChild(filmeItem);
                     atualizarFilmesInput(); // Atualiza o campo oculto ao remover
                 };
-
+                
                 filmeItem.appendChild(removeButton);
                 filmesAdicionadosDiv.appendChild(filmeItem);
 
@@ -101,7 +99,7 @@
             const filmesAdicionadosDiv = document.getElementById('filmesAdicionados');
             const filmesInput = document.getElementById('filmesInput');
             const ids = [...filmesAdicionadosDiv.children].map(item => item.dataset.id);
-            filmesInput.value = ids.join(' '); // Define os IDs no campo oculto
+            filmesInput.value = ids.join(','); // Define os IDs no campo oculto
         }
     </script>
 </body>
